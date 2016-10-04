@@ -21,7 +21,6 @@
     
     Result is some kind of map between real identifier in project and identifier from design pattern.
     
-    
-    
+## HOWTO run
 
-
+    You need to install lein environment. After that you can type 'lein run /absolute/path/to/src'
