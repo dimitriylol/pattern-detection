@@ -4,9 +4,9 @@ compilationUnit : <ws> packageDecl? <ws> importDecl* (<ws> declWithBraces <ws>)*
 (* DECL LEVEL *)
 (* .................................................. *)
 
-packageDecl : 'package' qid ';' ;
+packageDecl : <'package'> <ws> qid <ws> <';'> ;
 
-importDecl : 'import' 'static'? qid ('.' '*')? ';' ;
+importDecl : <'import'> <ws> <'static'?> <ws> qid <ws> ('.' '*')? <ws> <';'> ;
 
 declWithBraces : 
         classDecl
@@ -21,23 +21,23 @@ declBody :
 
 (* METHOD *)
 
-methodDecl : mods <ws> id <ws> id <ws> formalParams <ws> '{' declBody '}' ;
+methodDecl : mods <ws> type <ws> id <ws> formalParams <ws> '{' declBody '}' ;
 
 formalParams : '(' declPair* (<ws> ',' <ws> declPair)* ')' ;        
 
-declPair : id <ws> id ;
+declPair : type <ws> id ;
 
 (* CLASS *)
 
-classDecl : mods <ws> 'class' <ws> id <ws> extends? implements? '{' declBody '}' ; 
+classDecl : mods <ws> <'class'> <ws> id <ws> extends? implements? <'{'> declBody <'}'> ; 
 
 (* INTERFACE *)
 
-interfaceDecl : mods <ws> 'interface' <ws> id <ws> extends? '{' declBody '}' ;
+interfaceDecl : mods <ws> <'interface'> <ws> id <ws> extends? <'{'> declBody <'}'> ;
 
-extends: 'extends' <ws> id <ws> (',' <ws> id <ws>)* ;
+extends: 'extends' <ws> qid <ws> (',' <ws> qid <ws>)* ;
 
-implements: 'implements' <ws> id <ws> (',' <ws> id <ws>)* ;
+implements: 'implements' <ws> qid <ws> (',' <ws> qid <ws>)* ;
 
 (* .................................................. *)
 (* SMTH *)
@@ -50,6 +50,9 @@ mandSmthNotBraces : #'[^{}]+' ;
 (* .................................................. *)
 (* HELPER *)
 (* .................................................. *)
+
+(* TYPE *)
+type : qid ;
 
 (* MODIFIER *)
 
