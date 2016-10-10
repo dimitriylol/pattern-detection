@@ -14,7 +14,7 @@ declWithBraces :
     |   methodDecl
     ;
 
-declBody :
+declBody : 
        (<ws> declWithBraces <ws>)*
     |   <ws>
     ;
@@ -35,9 +35,9 @@ classDecl : mods <ws> <'class'> <ws> id <ws> extends? implements? <'{'> declBody
 
 interfaceDecl : mods <ws> <'interface'> <ws> id <ws> extends? <'{'> declBody <'}'> ;
 
-extends: 'extends' <ws> qid <ws> (',' <ws> qid <ws>)* ;
+extends: <'extends'> <ws> qid <ws> (',' <ws> qid <ws>)* ;
 
-implements: 'implements' <ws> qid <ws> (',' <ws> qid <ws>)* ;
+implements: <'implements'> <ws> qid <ws> (',' <ws> qid <ws>)* ;
 
 (* .................................................. *)
 (* SMTH *)
@@ -70,7 +70,7 @@ mod :
 
 (* IDENTIFIERS *)
 
-qid : id ('.' id)* ;
+qid : #'[a-zA-Z0-9_.]+' ;
 
 id : #'[a-zA-Z0-9_]+' ;
 
