@@ -16,4 +16,5 @@
 
 (defrecord JavaFile [file]
   ParseFile
-  (parse-src [this] (insta/parses java-parser (prepare-file file))))
+  (parse-src [this] {:tree (insta/parse java-parser (prepare-file file))
+                     :file-name (str file) }))
