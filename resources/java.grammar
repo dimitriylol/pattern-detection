@@ -1,7 +1,7 @@
 compilationUnit : <ws> packageDecl? <ws> importDecl* (<ws> declWithBraces <ws>)* ;
 
 (* .................................................. *)
-(* DECL LEVEL *)
+(* DECLARATIONS *)
 (* .................................................. *)
 
 packageDecl : <'package'> <ws> qid <ws> <';'> ;
@@ -14,22 +14,17 @@ declWithBraces :
     |   methodDecl
     ;
 
-declBody : 
-       (<ws> declWithBraces <ws>)*
+declBody : (<ws> inDeclBody <ws>)* ;
+
+inDeclBody :
+        declWithBraces 
+    |   attrDecl
     |   <ws>
     ;
 
-(* METHOD *)
-
-methodDecl : mods <ws> type <ws> id <ws> formalParams <ws> '{' declBody '}' ;
-
-formalParams : '(' declPair* (<ws> ',' <ws> declPair)* ')' ;        
-
-declPair : type <ws> id ;
-
 (* CLASS *)
 
-classDecl : mods <ws> <'class'> <ws> id <ws> extends? implements? <'{'> declBody <'}'> ; 
+classDecl : mods <ws> <'class'> <ws> id <ws> extends? implements? <'{'> declBody <'}'> ;
 
 (* INTERFACE *)
 
@@ -38,6 +33,28 @@ interfaceDecl : mods <ws> <'interface'> <ws> id <ws> extends? <'{'> declBody <'}
 extends: <'extends'> <ws> qid <ws> (',' <ws> qid <ws>)* ;
 
 implements: <'implements'> <ws> qid <ws> (',' <ws> qid <ws>)* ;
+
+(* METHOD *)
+
+methodDecl : mods <ws> type <ws> id <ws> formalParams <ws> '{' methodBody '}' ;
+
+methodBody : (<ws> inMethodBody <ws>)* ;
+
+inMethodBody :
+        declWithBraces
+    |   localVar
+    |   <ws>
+    ;
+
+formalParams : '(' declPair* (<ws> ',' <ws> declPair)* ')' ;        
+
+(* ATTRIBUTE *)
+
+attrDecl : mods <ws> declVar ';' ;
+
+(* LOCAL VARIABLE *)
+
+localVar : declVar ';' ;
 
 (* .................................................. *)
 (* SMTH *)
@@ -50,6 +67,20 @@ mandSmthNotBraces : #'[^{}]+' ;
 (* .................................................. *)
 (* HELPER *)
 (* .................................................. *)
+
+declVar : type <ws> id <ws> (',' <ws> id <ws>)* initVar? ;
+
+declPair : type <ws> id ;
+
+initVar: '=' <ws> initVal <ws> ;
+
+initVal : primitiveVal ;
+
+primitiveVal :
+        #'[a-zA-Z0-9.]*'
+    |   #'".*"'
+    |   #'\'.*\''
+    ;
 
 (* TYPE *)
 type : qid ;
