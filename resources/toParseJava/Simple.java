@@ -15,6 +15,8 @@ public class Simple {
 
 interface MyInterface { }
 
-private static interface AnotherInterface { }
+private static interface Inter { }
+
+private static interface AnotherInterface extends Inter { }
 
 private class EmptyPrivateClass extends PrivateStaticClass implements MyInterface, AnotherInterface {}
