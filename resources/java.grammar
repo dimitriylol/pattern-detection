@@ -30,13 +30,13 @@ classDecl : mods <ws> <'class'> <ws> id <ws> extends? implements? <'{'> declBody
 
 interfaceDecl : mods <ws> <'interface'> <ws> id <ws> extends? <'{'> declBody <'}'> ;
 
-extends: <'extends'> <ws> qid <ws> (',' <ws> qid <ws>)* ;
+extends: <'extends'> <ws> qid <ws> (<','> <ws> qid <ws>)* ;
 
-implements: <'implements'> <ws> qid <ws> (',' <ws> qid <ws>)* ;
+implements: <'implements'> <ws> qid <ws> (<','> <ws> qid <ws>)* ;
 
 (* METHOD *)
 
-methodDecl : mods <ws> type <ws> id <ws> formalParams <ws> '{' methodBody '}' ;
+methodDecl : mods <ws> type <ws> id <ws> formalParams <ws> <'{'> methodBody <'}'> ;
 
 methodBody : (<ws> inMethodBody <ws>)* ;
 
@@ -46,7 +46,7 @@ inMethodBody :
     |   <ws>
     ;
 
-formalParams : '(' declPair* (<ws> ',' <ws> declPair)* ')' ;        
+formalParams : <'('> declPair* (<ws> <','> <ws> declPair)* <')'> ;
 
 (* ATTRIBUTE *)
 
