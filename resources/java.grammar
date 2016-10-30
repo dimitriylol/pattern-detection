@@ -24,15 +24,20 @@ inDeclBody :
 
 (* CLASS *)
 
-classDecl : mods <ws> <'class'> <ws> id <ws> extends? implements? <'{'> declBody <'}'> ;
+classDecl : mods <ws> <'class'> <ws> id <ws> extends implements <'{'> declBody <'}'> ;
 
 (* INTERFACE *)
 
-interfaceDecl : mods <ws> <'interface'> <ws> id <ws> extends? <'{'> declBody <'}'> ;
+interfaceDecl : mods <ws> <'interface'> <ws> id <ws> extends <'{'> declBody <'}'> ;
 
-extends: <'extends'> <ws> qid <ws> (<','> <ws> qid <ws>)* ;
+extends:
+        <'extends'> <ws> qid <ws> (<','> <ws> qid <ws>)*
+    |   <ws>
+    ;
 
-implements: <'implements'> <ws> qid <ws> (<','> <ws> qid <ws>)* ;
+implements:
+        <'implements'> <ws> qid <ws> (<','> <ws> qid <ws>)*
+    |   <ws>;
 
 (* METHOD *)
 
