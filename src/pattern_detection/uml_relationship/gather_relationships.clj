@@ -11,10 +11,11 @@
   ([forest kinds-relationship]
    (let [id-resolver (build-resolver forest)]
      (map (fn [kind-relationship]
-            {:graph (mapcat (fn [tree]
-                              (gather {:kind kind-relationship
-                                       :tree tree
-                                       :id-resolver id-resolver}))
-                            forest)
+            {:graph (into {}
+                          (mapcat (fn [tree]
+                                    (gather {:kind kind-relationship
+                                             :tree tree
+                                             :id-resolver id-resolver}))
+                                  forest))
              :kind kind-relationship})
           kinds-relationship))))
