@@ -5,7 +5,7 @@
             [pattern-detection.uml-relationship.utils.match-rules :refer :all]
             [clojure.java.io :as io]))
 
-(def ^:const java-parsing-tests "toParseJava/")
+(def ^:const java-parsing-tests "parse_java/")
 
 (defn- has-children [node]
   (> (count node) 1))
