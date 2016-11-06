@@ -20,81 +20,93 @@
   "class/interface declaration with extends/implements.
    Methods with formal params, empty body."
   (let [parsed-tree (parse-test-file "Simple.java")]
-    (is (= (count (full-tree-matcher
-                   parsed-tree (matcher :classDecl)))
-           2))
-    (is (= (count (full-tree-matcher
-                   parsed-tree (matcher :interfaceDecl)))
-           3))
+    (is (= (count (full-tree-matcher parsed-tree (matcher :classDecl))) 2))
+    (is (= (count (full-tree-matcher parsed-tree (matcher :interfaceDecl))) 3))
     (is (= (count (matcher-combination
                    full-tree-matcher
                    parsed-tree
                    (match-decl-with-id :classDecl "Simple")
                    (matcher :methodDecl)))
            6))
-    (is (= (matcher-combination
-            full-tree-matcher
-            parsed-tree
-            (match-decl-with-id :classDecl "EmptyPrivateClass")
-            (matcher :extends)
-            (matcher :qid))
+    (is (= (matcher-combination full-tree-matcher
+                                parsed-tree
+                                (match-decl-with-id :classDecl
+                                                    "EmptyPrivateClass")
+                                (matcher :extends)
+                                (matcher :qid))
            '([:qid "PrivateStaticClass"])))
-    (is (= (matcher-combination
-            full-tree-matcher
-            parsed-tree
-            (match-decl-with-id :classDecl "EmptyPrivateClass")
-            (matcher :implements)
-            (matcher :qid))
-           '([:qid "MyInterface"]
-             [:qid "AnotherInterface"])))
-    (is (= (matcher-combination
-            full-tree-matcher
-            parsed-tree
-            (match-decl-with-id :interfaceDecl "AnotherInterface")
-            (matcher :extends)
-            (matcher :qid))
+    (is (= (matcher-combination full-tree-matcher
+                                parsed-tree
+                                (match-decl-with-id :classDecl
+                                                    "EmptyPrivateClass")
+                                (matcher :implements)
+                                (matcher :qid))
+           '([:qid "MyInterface"] [:qid "AnotherInterface"])))
+    (is (= (matcher-combination full-tree-matcher
+                                parsed-tree
+                                (match-decl-with-id :interfaceDecl
+                                                    "AnotherInterface")
+                                (matcher :extends)
+                                (matcher :qid))
            '([:qid "Inter"])))))
 
 (deftest test2-parsing
   "declaration attributes and localVariables.
    Possible initialization by primitive values"
   (let [parsed-tree (parse-test-file "AttributeLocalVariable.java")]
-    (is (= (count (full-tree-matcher parsed-tree (matcher :attrDecl)))
-           4))
-    (is (= (count (full-tree-matcher parsed-tree (matcher :localVar)))
-           5))
-    (is (= (matcher-combination
-            full-tree-matcher
-            parsed-tree
-            (matcher :attrDecl)
-            (matcher-decl-var "staticPublicInt")
-            (matcher :primitiveVal))
+    (is (= (count (full-tree-matcher parsed-tree (matcher :attrDecl))) 4))
+    (is (= (count (full-tree-matcher parsed-tree (matcher :localVar))) 5))
+    (is (= (matcher-combination full-tree-matcher
+                                parsed-tree
+                                (matcher :attrDecl)
+                                (matcher-decl-var "staticPublicInt")
+                                (matcher :primitiveVal))
            '([:primitiveVal "0"])))
-    (is (= (matcher-combination
-            full-tree-matcher
-            parsed-tree
-            (matcher :attrDecl)
-            (matcher-decl-var "preciseLong")
-            (matcher :initVal))
+    (is (= (matcher-combination full-tree-matcher
+                                parsed-tree
+                                (matcher :attrDecl)
+                                (matcher-decl-var "preciseLong")
+                                (matcher :initVal))
            '()))    
     (is (= (some #(= (nth % 1) "var")
-                 (matcher-combination
-                  full-tree-matcher
-                  parsed-tree
-                  (matcher :attrDecl)
-                  (matcher :id)))
+                 (matcher-combination full-tree-matcher
+                                      parsed-tree
+                                      (matcher :attrDecl)
+                                      (matcher :id)))
            nil))
-    (is (= (matcher-combination
-            full-tree-matcher
-            parsed-tree
-            (matcher :localVar)
-            (matcher-decl-var "var")
-            (matcher-rule [:type [:qid "float"]]))
+    (is (= (matcher-combination full-tree-matcher
+                                parsed-tree
+                                (matcher :localVar)
+                                (matcher-decl-var "var")
+                                (matcher-rule [:type [:qid "float"]]))
            '([:type [:qid "float"]])))
-    (is (= (matcher-combination
-            full-tree-matcher
-            parsed-tree
-            (matcher :localVar)
-            (matcher-decl-var "privateLong"))
+    (is (= (matcher-combination full-tree-matcher
+                                parsed-tree
+                                (matcher :localVar)
+                                (matcher-decl-var "privateLong"))
            '()))))
 
+(deftest test3-parsing
+  "class constructors"
+  (let [parsed-tree (parse-test-file "Constructor.java")]
+    (is (= (count (full-tree-matcher parsed-tree (matcher :methodDecl))) 2))
+    (is (= (count (full-tree-matcher parsed-tree (matcher :type))) 4))))
+
+(deftest test4-parsing
+  "stmt level"
+  (let [parsed-tree (parse-test-file "Stmt.java")]
+    (is (= (count (full-tree-matcher parsed-tree (matcher :stmt))) 7))
+    (is (= (count (full-tree-matcher parsed-tree (matcher :call))) 1))
+    (is (= (count (full-tree-matcher parsed-tree (matcher :narrowing))) 1))
+    (is (= (count (full-tree-matcher parsed-tree (matcher :assignment))) 2))
+    (is (= (count (full-tree-matcher parsed-tree (matcher :initVar))) 2))
+    (is (= (matcher-combination full-tree-matcher
+                                parsed-tree
+                                (matcher :newOperator)
+                                (matcher :qid))
+           '([:qid "Stmt"])))
+    (is (= (matcher-combination full-tree-matcher
+                                parsed-tree
+                                (matcher-rule [:assignment [:qid "this.initAttr"] & children])
+                                (matcher :primitiveVal))
+           '([:primitiveVal "\"again init\""])))))
