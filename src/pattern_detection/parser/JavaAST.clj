@@ -1,21 +1,18 @@
 (ns pattern-detection.parser.JavaAST)
 
-(defn build-qid [package-id]
-  (fn [type-id] (str package-id "." type-id)))
+(defn build-qid [package-id type-id]
+  (str package-id "." type-id))
 
-(defn get-id [id] (nth id 1))
-
-(defn get-type-id [type-decl]
-  (get-id (nth type-decl 2)))
-
-(defn get-class-id [class-decl] (get-type-id class-decl))
-
-(defn get-interface-id [interface-decl] (get-type-id interface-decl))
+(defn get-id [id]
+  (nth id 1))
 
 (defn get-qid [qid-sort]
   (nth qid-sort 1))
 
-(defn package-decl-p [grammar-sort]
+(defn get-type-id [type-decl]
+  (get-id (nth type-decl 2)))
+
+(defn- package-decl-p [grammar-sort]
   (= :packageDecl (nth grammar-sort 0)))
 
 (defn get-package-id [comp-unit]

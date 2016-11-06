@@ -6,7 +6,9 @@ compilationUnit : <ws> packageDecl? <ws> importDecl* (<ws> declWithBraces <ws>)*
 
 packageDecl : <'package'> <ws> qid <ws> <';'> ;
 
-importDecl : <'import'> <ws> <'static'?> <ws> qid <ws> ('.' '*')? <ws> <';'> ;
+importDecl : <'import'> <ws> <'static'?> <ws> importId <ws> <';'> ;
+
+importId : qid ('.*')? ;       
 
 declWithBraces : 
         classDecl
@@ -68,7 +70,6 @@ localVar : declVar ';' ;
 smthNotBraces : #'[^{}]*' ;
 
 mandSmthNotBraces : #'[^{}]+' ;
-
 (* .................................................. *)
 (* HELPER *)
 (* .................................................. *)

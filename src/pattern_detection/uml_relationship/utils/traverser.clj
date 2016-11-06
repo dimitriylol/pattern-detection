@@ -14,3 +14,8 @@
 
 (defn full-tree-matcher [tree matcher-function]
   (flatten-only-list (full-tree-matcher-helper tree matcher-function)))
+
+(defn full-tree-rebuilder [tree replacer-function]
+  (if (coll? tree)
+    (into [] (map #(full-tree-traverser % replacer-function) (replacer-function tree)))
+    tree))

@@ -10,12 +10,16 @@
    (fn [local-tree]
      (match [local-tree]
             [[:classDecl & children]]
-            {(builder-qid (get-class-id local-tree)) :class}
+            {(builder-qid (get-type-id local-tree)) :class}
             [[:interfaceDecl & children]]
-            {(builder-qid (get-interface-id local-tree)) :interface}   
+            {(builder-qid (get-type-id local-tree)) :interface}   
             :else nil))))
 
 (defn build-resolver [forest]
-  (apply merge (mapcat #(gather-decls (:tree %)
-                                      (build-qid (get-package-id (:tree %))))
-                       forest)))
+  (map
+   (fn [{tree :tree}]
+     { (get-package-id tree)
+       (apply merge
+              (gather-decls tree
+                            (partial build-qid (get-package-id tree))))})
+   forest))
