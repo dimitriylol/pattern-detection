@@ -49,11 +49,23 @@ methodBody : (<ws> inMethodBody <ws>)* ;
 
 inMethodBody :
         declWithBraces
-    |   localVar
+    |   stmt
     |   <ws>
     ;
 
 formalParams : <'('> declPair* (<ws> <','> <ws> declPair)* <')'> ;
+
+(* STMT *)
+
+stmt :
+        localVar
+    |   return
+    |   expr <ws> ';'
+    ;
+
+return : <'return'> <ws> expr <';'>;
+
+notInteresting : smthNotBraces <';'> ;
 
 (* ATTRIBUTE *)
 
@@ -62,6 +74,46 @@ attrDecl : mods <ws> declVar ';' ;
 (* LOCAL VARIABLE *)
 
 localVar : declVar ';' ;
+
+(* EXPRESSION *)
+
+expr :
+        operation
+    |   narrowing
+    |   primitiveVal
+    |   qid
+    |   call
+    |   newOperator
+    |   '(' expr ')'
+    ;
+
+call : qid <ws> '(' severalExpr ')' ; 
+
+severalExpr : (<ws> expr <ws> (',' | '') <ws>)* ;
+
+newOperator : <ws> <'new'> <ws> type <ws> ( '(' severalExpr ')' )? (<'{'> severalExpr | declBody <'}'>)? ;
+
+operation :
+        unaryOperator <ws> expr <ws>
+    |   <ws> expr <ws> unaryOperator <ws>
+    |   <ws> expr <ws> binaryOperator <ws> expr <ws>
+    |   assignment 
+    ;
+
+assignment : <ws> qid <ws> assignmentOperator <ws> expr <ws> ;  
+
+assignmentOperator: '=' ;
+
+binaryOperator :
+        '+' | '-' | '*' | '/' | '%'  
+    |   '==' | '<=' | '>=' | '<' | '>' | '!='
+    |   '&' | '|' | '^' |  '<<' | '>>' | '>>>'
+    |   '&&' | '||' 
+    ;
+
+unaryOperator : '~' | '!' | '++' | '--' ;
+
+narrowing : '(' type ')' expr ;
 
 (* .................................................. *)
 (* SMTH *)
@@ -78,9 +130,7 @@ declVar : type <ws> id <ws> (',' <ws> id <ws>)* initVar? ;
 
 declPair : type <ws> id ;
 
-initVar: '=' <ws> initVal <ws> ;
-
-initVal : primitiveVal ;
+initVar: '=' <ws> expr <ws> ;
 
 primitiveVal :
         #'[a-zA-Z0-9.]*'
@@ -102,7 +152,8 @@ mod :
     |   'static'     
     |   'abstract'   
     |   'final'      
-    |   'strictfp'             
+    |   'strictfp'
+    |   'default'
     ;
 
 (* IDENTIFIERS *)

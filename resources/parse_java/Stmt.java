@@ -10,11 +10,13 @@ interface IStmt {
 }
 
 public class Stmt implements IStmt {
+    String initAttr;
     public Stmt () {
-        String initAttr = "init";
+        initAttr = "init";
+        this.initAttr = "again init";
     }
     
-    public static foo (int i) {
+    public static int foo (int i) {
         int a = i + 14;
         IStmt self = new Stmt();
         return i + 88;
