@@ -17,5 +17,5 @@
 
 (defn full-tree-rebuilder [tree replacer-function]
   (if (coll? tree)
-    (into [] (map #(full-tree-traverser % replacer-function) (replacer-function tree)))
+    (into [] (map #(full-tree-rebuilder % replacer-function) (replacer-function tree)))
     tree))
