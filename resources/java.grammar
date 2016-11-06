@@ -21,7 +21,7 @@ declBody : (<ws> inDeclBody <ws>)* ;
 inDeclBody :
         declWithBraces 
     |   attrDecl
-    |   <ws>
+    |   <ws> &'}' <ws>
     ;
 
 (* CLASS *)
@@ -43,7 +43,7 @@ implements:
 
 (* METHOD *)
 
-methodDecl : mods <ws> type <ws> id <ws> formalParams <ws> <'{'> methodBody <'}'> ;
+methodDecl : mods <ws> type? <ws> id <ws> formalParams <ws> <'{'> methodBody <'}'> ;
 
 methodBody : (<ws> inMethodBody <ws>)* ;
 
@@ -107,14 +107,14 @@ mod :
 
 (* IDENTIFIERS *)
 
-qid : #'[a-zA-Z0-9_.]+' ;
+qid : !(mod <mandatoryWS>) #'[a-zA-Z0-9_.]+' ;
 
-id : #'[a-zA-Z0-9_]+' ;
+id : !(mod <mandatoryWS>) #'[a-zA-Z0-9_]+' ;
 
 (* .................................................. *)
 (* WS *)
 (* .................................................. *)
-
+    
 <ws>: <#'\s*'> ;
 
 <mandatoryWS>: <#'\s+'> ;
