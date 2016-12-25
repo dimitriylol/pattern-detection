@@ -22,7 +22,7 @@ inDeclBody :
         declWithBraces 
     |   attrDecl
     |   <ws> &'}' <ws>
-    ;
+    ;        
 
 (* CLASS *)
 
@@ -43,7 +43,7 @@ implements:
 
 (* METHOD *)
 
-methodDecl : mods <ws> type? <ws> id <ws> formalParams <ws> <'{'> methodBody <'}'> ;
+methodDecl : mods <ws> type? <ws> id <ws> formalParams <ws> (<'{'> methodBody <'}'> | ';') ;
 
 methodBody : (<ws> inMethodBody <ws>)* ;
 
@@ -69,11 +69,11 @@ notInteresting : smthNotBraces <';'> ;
 
 (* ATTRIBUTE *)
 
-attrDecl : mods <ws> declVar ';' ;
+attrDecl : mods <ws> declVar <ws> ';' ;
 
 (* LOCAL VARIABLE *)
 
-localVar : declVar ';' ;
+localVar : declVar <ws> ';' ;
 
 (* EXPRESSION *)
 
@@ -126,7 +126,7 @@ mandSmthNotBraces : #'[^{}]+' ;
 (* HELPER *)
 (* .................................................. *)
 
-declVar : type <ws> id <ws> (',' <ws> id <ws>)* initVar? ;
+declVar : type <ws> id <ws> initVar? <ws> (',' <ws> id <ws> initVar? <ws>)* initVar? ;
 
 declPair : type <ws> id ;
 
@@ -139,7 +139,18 @@ primitiveVal :
     ;
 
 (* TYPE *)
-type : qid ;
+type : primitiveType / qid ;
+
+primitiveType:
+        'boolean'
+    |   'char'
+    |   'byte'
+    |   'short'
+    |   'int'
+    |   'long'
+    |   'float'
+    |   'double'
+    ;
 
 (* MODIFIER *)
 
@@ -162,9 +173,7 @@ qid : !(mod <mandatoryWS>) #'[a-zA-Z0-9_.]+' ;
 
 id : !(mod <mandatoryWS>) #'[a-zA-Z0-9_]+' ;
 
-(* .................................................. *)
 (* WS *)
-(* .................................................. *)
     
 <ws>: <#'\s*'> ;
 
