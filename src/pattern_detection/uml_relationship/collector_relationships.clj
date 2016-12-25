@@ -1,9 +1,12 @@
-(ns pattern-detection.uml-relationship.gather-relationships
-  (:require [pattern-detection.uml-relationship.uml-relationship :refer [gather]]
-            [pattern-detection.uml-relationship.id-resolver :refer [build-resolver]]))
+(ns pattern-detection.uml-relationship.collector-relationships
+  (:require [pattern-detection.uml-relationship.gather-relationship :refer [gather]]
+            [pattern-detection.uml-relationship.id-resolver :refer [build-resolver]]
+            [pattern-detection.uml-relationship.qualify-id :refer [make-id-qualified]]))
 
 (defn- all-kinds-relationship []
-  (list :generalization))
+  (list :generalization
+        :realization
+        :dependency))
 
 (defn gather-relationships
   ([forest]
@@ -16,6 +19,6 @@
                                     (gather {:kind kind-relationship
                                              :tree tree
                                              :id-resolver id-resolver}))
-                                  forest))
+                                  (make-id-qualified forest)))
              :kind kind-relationship})
           kinds-relationship))))
