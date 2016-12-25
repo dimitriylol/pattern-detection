@@ -11,9 +11,10 @@
 (defn- relationship-color [uml-relationship]
   (get {:generalization :blue} uml-relationship))
 
-(defn build-graph [graphs-hash-map]
-  (apply digraph
-         (map #(colorize-edges (digraph (:graph %))
-                               (relationship-color (:kind %)))
-              graphs-hash-map)))
+(defn build-graphs [graphs-hash-map]
+  (map #(colorize-edges (digraph (:graph %))
+                        (relationship-color (:kind %)))
+       graphs-hash-map))
 
+(defn build-graph [graphs-hash-map]
+  (apply digraph (build-graphs graphs-hash-map)))
