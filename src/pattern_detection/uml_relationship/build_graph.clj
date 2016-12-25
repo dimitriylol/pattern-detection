@@ -9,7 +9,9 @@
    (edges loom-digraph)))
 
 (defn- relationship-color [uml-relationship]
-  (get {:generalization :blue} uml-relationship))
+  (get {:generalization :blue
+        :realization :black
+        :dependency :red} uml-relationship))
 
 (defn build-graphs [graphs-hash-map]
   (map #(colorize-edges (digraph (:graph %))
