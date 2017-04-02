@@ -78,10 +78,16 @@
        '(([:a :b]) ([:b :c]) ([:c :d]))
        '({:a :a, :b :b, :c :c}))))
 
-;; TODO: fix me
 (deftest test8-detection
-  (testing
-      (exact-detection-test-template
-       '(([:a :b]) ([:b :c]))
-       '(([:a1 :b1]) ([:b1 :c1]) ([:c1 :d1]))
-       '())))
+  (testing (exact-detection-test-template
+            '(([:a :b] [:a :c]) ([:b :d] [:b :e] [:c :e] [:c :f]))
+            '(([:a :b] [:a :c]) ([:b :d] [:b :e] [:c :f] [:c :g]))
+            '())))
+
+;; ;; TODO: fix me
+;; (deftest test9-detection
+;;   (testing
+;;       (exact-detection-test-template
+;;        '(([:a :b]) ([:b :c]))
+;;        '(([:a1 :b1]) ([:b1 :c1]) ([:c1 :d1]))
+;;        '())))
